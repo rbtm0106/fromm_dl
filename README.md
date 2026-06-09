@@ -1,3 +1,16 @@
+Disclaimer
+Your accound need to have access to the video to downlaod it... When you generate your fromm token, it will log you out, but the token is valid 14 days, you can log back on the fromm app.
+The script is very simple and can be improve, you can ask gemini, gpt or other llm to help you improve it!
+ - Add a package to manage your fromm token storing
+ - Add some option on yt-dld to improve the efficiency of the download
+
+Fromm (if you read this, your app is shitty by the way) reencode the video, so this way to downlaod them is not the best. The best quality is only available during live streaming. If you want to backup the live replay you will need to explore fromm apk and the agora sdk ;)
+
+It's still better to use this than screen-reccord the live (and because fromm reencode the video and chose to use a low bitrate, the video size is way smaller than a screenreccord)
+
+
+___
+
 This readme was generated with gemini.
 
 # Simple Fromm Video Downloader CLI
