@@ -3,6 +3,8 @@ Your accound need to have access to the video to downlaod it... When you generat
 The script is very simple and can be improve, you can ask gemini, gpt or other llm to help you improve it!
  - Add a package to manage your fromm token storing
  - Add some option on yt-dld to improve the efficiency of the download
+ - dowload all the video you are missing/collect use the date/name of the stream as a filename
+ - ...
 
 Fromm (if you read this, your app is shitty by the way) reencode the video, so this way to downlaod them is not the best. The best quality is only available during live streaming. If you want to backup the live replay you will need to explore fromm apk and the agora sdk ;)
 
