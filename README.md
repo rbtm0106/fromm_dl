@@ -30,6 +30,13 @@ pip install pycryptodome requests
 
 You also need [`yt-dlp`](https://github.com/yt-dlp/yt-dlp) installed and added to your system's PATH for the automatic download feature to work.
 
+
+You can downlaod the fromm_dl.p maualy or:
+
+```bash
+git clone https://github.com/rbtm0106/fromm_dl.git
+```
+
 ---
 
 ## 1. Command to Generate Your Token
