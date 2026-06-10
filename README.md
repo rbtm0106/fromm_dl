@@ -64,3 +64,7 @@ python fromm_dl.py https://fromm.my/1ps1e0 -t "YOUR_BEARER_TOKEN_HERE" -o "C:/Us
 * **`https://fromm.my/1ps1e0`**: The target Fromm shortlink.
 * **`-t`**: Your active Bearer token (copied from Step 1).
 * **`-o`**: (Optional) The absolute path and filename where you want to save the final file. (just like the -o option in `yt-dlp`)
+
+# démo
+
+https://www.youtube.com/watch?v=ukSg8WRaIvM
