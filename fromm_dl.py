@@ -81,14 +81,40 @@ def get_fromm_playlist(short_url, bearer_token, output_path=""):
 
     location = response_redirect.headers.get('Location')
     decoded_location = urllib.parse.unquote(urllib.parse.unquote(location))
-    match = re.search(r'media/(\d+)', decoded_location)
+    match = re.search(r'channels/([^/]+)/media/(\d+)', decoded_location)
 
     if not match:
         print("[!] Error: Could not find the media ID in the redirect URL.")
         return
 
-    media_id = match.group(1)
-    print(f"[*] Successfully extracted Media ID: {media_id}")
+    channel_slug = match.group(1)
+    media_id = match.group(2)
+    print(f"[*] Extracted Channel Name: {channel_slug} | Media ID: {media_id}")
+
+    # --- Dynamic Channel ID Lookup ---
+    print(f"[*] Fetching channel ID for '{channel_slug}'...")
+    channel_url = f"https://channel-api.frommyarti.com/channels/{channel_slug}"
+    channel_headers = {
+        "Host": "channel-api.frommyarti.com",
+        "uuid": str(uuid.uuid4())
+    }
+
+    try:
+        response_channel = requests.get(channel_url, headers=channel_headers)
+        response_channel.raise_for_status()
+        channel_json = response_channel.json()
+
+        if not channel_json.get("success"):
+            print(f"[!] Error: Channel metadata request failed. {channel_json}")
+            return
+
+        channel_id = channel_json["data"]["channel"]["id"]
+        print(f"[*] Successfully resolved Channel ID: {channel_id}")
+
+    except Exception as e:
+        print(f"[!] Failed to resolve channel details: {e}")
+        return
+    # ---------------------------------
 
     api_url = f"https://channel-api.frommyarti.com/media/posts/{media_id}"
     print(f"[*] Fetching API: {api_url} ...")
@@ -96,14 +122,14 @@ def get_fromm_playlist(short_url, bearer_token, output_path=""):
     api_headers = {
         "Accept": "*/*",
         "Authorization": f"Bearer {bearer_token}",
-        "channel-id": "6efa6d28-f1ca-47a6-9cb9-91d222baf8f3",
-        "country": "FR",
+        "channel-id": channel_id,
+        "country": "KO",
         "language": "ko",
         "Origin": "https://channel.frommyarti.com",
         "Referer": "https://channel.frommyarti.com/",
-        "timezone": "Europe/Paris",
+        "timezone": "Asia/Seoul",
         "User-Agent": "Mozilla/5.0 (Linux; Android 16; SM-S938B Build/BP4A.251205.006; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/148.0.7778.225 Mobile Safari/537.36",
-        "uuid": "bf125461-62ff-4d77-9614-ea508cbfe88a"
+        "uuid": str(uuid.uuid4())
     }
 
     response_api = requests.get(api_url, headers=api_headers)
@@ -117,6 +143,7 @@ def get_fromm_playlist(short_url, bearer_token, output_path=""):
 
     if json_data.get("success"):
         playlist_url = json_data["data"]["post"]["url"]
+        playlist_url = re.sub(r'_\d+x\d+', '', playlist_url) if "watermark_thumbnail" in playlist_url else playlist_url
         post_title = json_data["data"]["post"].get("title", "Unknown Title")
 
         parsed_url = urllib.parse.urlparse(playlist_url)
@@ -229,7 +256,7 @@ def main():
     elif args.email and args.password:
         print("[*] Using Email/Password to authenticate...")
         device_id = str(uuid.uuid4())
-        _, token = signin(args.email, args.password, device_id, AUTH_BASE_URL)
+        _, token = signin(args.email, args.password, device_id, AUTH_BASE_URL_LOGIN)
 
         if token:
             print("[*] Successfully retrieved Bearer Token.")
